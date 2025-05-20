@@ -1,7 +1,4 @@
-﻿using System.Reflection.Metadata;
-using System.Runtime.CompilerServices;
-using System.Xml;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace CalendarForChessFans
 {
