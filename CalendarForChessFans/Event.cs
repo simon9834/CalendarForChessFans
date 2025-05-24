@@ -1,34 +1,35 @@
 ﻿
 //using Spectre.Console;
+using Microsoft.VisualBasic;
 using System.Drawing;
 
 namespace CalendarForChessFans
 {
     public class Event
     {
-        private string Title { get; set; }
-        private DateOnly? Date { get; set; }
-        private bool isMoreDays { get; set; }
-        private DateOnly? DateOptStart { get; set; }
-        private DateOnly? DateOptEnd { get; set; }
-        private TimeOnly? Start { get; set; }
-        private TimeOnly? End { get; set; }
-        private string? Location { get; set; }
-        private string? Notes { get; set; }
-        private string? RepeatCycle { get; set; }
-        private Color color { get; set; }
+        public string Title { get; set; }
+        public DateTime? Date { get; set; }
+        public bool isMoreDays { get; set; }
+        public DateTime? DateOptStart { get; set; }
+        public DateTime? DateOptEnd { get; set; }
+        public TimeOnly? Start { get; set; }
+        public TimeOnly? End { get; set; }
+        public string? Location { get; set; }
+        public string? Notes { get; set; }
+        public string? RepeatCycle { get; set; }
+        public Color color { get; set; }
 
-        public Event(string title, DateOnly? date, bool isMoreDays, DateOnly? dateOptStart, DateOnly? dateOptEnd, TimeOnly? start, TimeOnly? end, string? location, string? notes, string? repeats, Color color)
+        public Event(string title, DateTime? date, bool isMoreDays, DateTime? dateOptStart, DateTime? dateOptEnd, TimeOnly? start, TimeOnly? end, string? location, string? notes, string? repeats, Color color)
         {
             handleCtorAction(title, date, isMoreDays, dateOptStart, dateOptEnd, start, end, location, notes, repeats);
             this.color = color;
         }
-        public Event(string title, DateOnly? date, bool isMoreDays, DateOnly dateOptStart, DateOnly dateOptEnd, TimeOnly start, TimeOnly end, string location, string notes, string repeats)
+        public Event(string title, DateTime? date, bool isMoreDays, DateTime dateOptStart, DateTime dateOptEnd, TimeOnly start, TimeOnly end, string location, string notes, string repeats)
         {
             handleCtorAction(title, date, isMoreDays, dateOptStart, dateOptEnd, start, end, location, notes, repeats);
             this.color = Color.Blue;
         }
-        public void handleCtorAction(string title, DateOnly? date, bool isMoreDays, DateOnly? dateOptStart, DateOnly? dateOptEnd, TimeOnly? start, TimeOnly? end, string? location, string? notes, string? repeats)
+        public void handleCtorAction(string title, DateTime? date, bool isMoreDays, DateTime? dateOptStart, DateTime? dateOptEnd, TimeOnly? start, TimeOnly? end, string? location, string? notes, string? repeats)
         {
             Title = title;
             RepeatCycle = repeats;
