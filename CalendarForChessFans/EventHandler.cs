@@ -9,7 +9,7 @@ namespace CalendarForChessFans
         {
             foreach (Event e in l)
             {
-                cr.HighlightStyle(Style.Parse(e.color.ToString()));
+                //cr.HighlightStyle(Style.Parse(e.color.ToString())); zmenit styl dle poctu ukolu ve dni
                 if(e.Date != null)
                 {
                     cr.AddCalendarEvent((DateTime)e.Date);

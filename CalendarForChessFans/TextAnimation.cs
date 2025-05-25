@@ -18,7 +18,7 @@ namespace CalendarForChessFans
                     Console.ForegroundColor = highlightCol;
                     Console.SetCursorPosition(i, Console.CursorTop);
                     Console.Write(char.ToUpper(charArr[i]));
-                    
+
                     if (charArr[i] == ' ')
                     {
                         Task.Delay(200).Wait();
@@ -28,15 +28,15 @@ namespace CalendarForChessFans
                         Task.Delay(50).Wait();
                     }
 
-                        Console.ForegroundColor = finalCol;
+                    Console.ForegroundColor = finalCol;
                     Console.SetCursorPosition(i, Console.CursorTop);
                     Console.Write(char.ToLower(charArr[i]));
                 }
             }
             finally
             {
-                Console.ForegroundColor= ConsoleColor.White;
-                Console.CursorVisible=true;
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.CursorVisible = true;
                 _lock.Release();
             }
         }
