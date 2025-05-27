@@ -19,9 +19,5 @@ TextAnimation ta = new TextAnimation();
 await Task.Run(() => ta.TextToAnimateWave("SSS", ConsoleColor.Magenta, ConsoleColor.Red));
 
 Day day = new Day();
-day.CreateDaySchedule("tuesday 13");
-
-TxtFormating tf = new TxtFormating();
-Console.WriteLine(tf.CenterText("hey m"));
 
 

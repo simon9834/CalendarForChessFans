@@ -12,24 +12,24 @@ namespace CalendarForChessFans
         public bool isMoreDays { get; set; }
         public DateTime? DateOptStart { get; set; }
         public DateTime? DateOptEnd { get; set; }
-        public TimeOnly? Start { get; set; }
-        public TimeOnly? End { get; set; }
+        public int? Start { get; set; }
+        public int? End { get; set; }
         public string? Location { get; set; }
         public string? Notes { get; set; }
         public string? RepeatCycle { get; set; }
         public Color color { get; set; }
 
-        public Event(string title, DateTime? date, bool isMoreDays, DateTime? dateOptStart, DateTime? dateOptEnd, TimeOnly? start, TimeOnly? end, string? location, string? notes, string? repeats, Color color)
+        public Event(string title, DateTime? date, bool isMoreDays, DateTime? dateOptStart, DateTime? dateOptEnd, int? start, int? end, string? location, string? notes, string? repeats, Color color)
         {
             handleCtorAction(title, date, isMoreDays, dateOptStart, dateOptEnd, start, end, location, notes, repeats);
             this.color = color;
         }
-        public Event(string title, DateTime? date, bool isMoreDays, DateTime dateOptStart, DateTime dateOptEnd, TimeOnly start, TimeOnly end, string location, string notes, string repeats)
+        public Event(string title, DateTime? date, bool isMoreDays, DateTime dateOptStart, DateTime dateOptEnd, int start, int end, string location, string notes, string repeats)
         {
             handleCtorAction(title, date, isMoreDays, dateOptStart, dateOptEnd, start, end, location, notes, repeats);
             this.color = Color.Blue;
         }
-        public void handleCtorAction(string title, DateTime? date, bool isMoreDays, DateTime? dateOptStart, DateTime? dateOptEnd, TimeOnly? start, TimeOnly? end, string? location, string? notes, string? repeats)
+        public void handleCtorAction(string title, DateTime? date, bool isMoreDays, DateTime? dateOptStart, DateTime? dateOptEnd, int? start, int? end, string? location, string? notes, string? repeats)
         {
             Title = title;
             RepeatCycle = repeats;

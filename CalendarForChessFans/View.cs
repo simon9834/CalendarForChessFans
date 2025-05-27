@@ -9,7 +9,7 @@ namespace CalendarForChessFans
         }
         public void Day()
         {
-
+            
         }
     }
 }

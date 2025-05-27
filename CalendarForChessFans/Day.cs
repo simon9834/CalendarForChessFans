@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,30 +10,33 @@ namespace CalendarForChessFans
 {
     public class Day
     {
-        //public string name;
-        public void CreateDaySchedule(string title)
+        public void CreateDayScheduleWEvents(string title, List<Event> li)
         {
-            string line = new string('-', Console.WindowWidth - 6);
+            Console.Clear();
             Console.BufferHeight = 1000;
+            sortEventListByDate(li);
+            string line = new string('-', Console.WindowWidth - 6);
+
             spaceBarTop();
-            AnsiConsole.Write(new FigletText(FigletFont.Default, title));
+            AnsiConsole.Write(new FigletText(FigletFont.Default, title).Centered());
             spaceBarTop();
 
             int iHolder = 0;
-            writeHours(ref iHolder, 12);
+            int currTime = 0;
+            writeHours(ref iHolder, 12, ref currTime, li);
             writeLines(line, 43, false);
-            writeHours(ref iHolder, 25);
+            writeHours(ref iHolder, 25, ref currTime, li);
             writeLines(line, 52, true);
-
         }
         public void writeLines(string line, int height, bool onemore)
         {
             Console.SetCursorPosition(5, Console.CursorTop - height);
             int max = 24;
             if (onemore) max++;
+
             for (int i = 0; i < max; i++)
             {
-                if ((i % 2 == 0 || i == 0))
+                if (i % 2 == 0 || i == 0)
                 {
                     Console.Write(line);
                     Console.SetCursorPosition(5, Console.CursorTop + 1);
@@ -50,25 +54,60 @@ namespace CalendarForChessFans
                 }
             }
         }
-        public void writeHours(ref int iHolder, int max)
+        public void writeHours(ref int iHolder, int max, ref int currTime, List<Event> li)
         {
+            int time;
+            int index;
+            bool isFilled = false;
+            string title = "THREE DAYS GRAZE";
             Console.SetCursorPosition(0, Console.CursorTop);
             for (int i = iHolder; i < max; i++)
             {
                 if (i > 9)
                 {
-                    Console.WriteLine($"{i}\n");
+                    Console.WriteLine($"{i}");
                 }
                 else
                 {
-                    Console.WriteLine($"0{i}\n");
+                    Console.WriteLine($"0{i}");
                 }
+
+                time = currTime;
+                if ((index = li.FindIndex(element => element.Start == time)) != -1)
+                {
+                    isFilled = true;
+                    title = li[index].Title;
+                    //Console.BackgroundColor = li[index].color;      Convert color rightly and set text color as opposite
+                }
+
                 if (i == (max - 1))
                 {
                     iHolder = i + 1;
                 }
+
+                if (!isFilled)
+                {
+                    Console.WriteLine();
+                }
+                else
+                {
+                    Console.WriteLine(title);
+                    Console.BackgroundColor = ConsoleColor.Black;
+                }
+
+                    currTime++;
             }
         }
         public void spaceBarTop() { for (int i = 0; i < 2; i++) Console.WriteLine(); }
+        public void sortEventListByDate(List<Event> li)
+        {
+            li.Sort((a, b) =>
+            {
+                if (a == null && b == null) return 0;
+                if (a == null) return 1;
+                if (b == null) return -1;
+                return (int)a.Start - (int)b.Start;
+            });
+        }
     }
 }
