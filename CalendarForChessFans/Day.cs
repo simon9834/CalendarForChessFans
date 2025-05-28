@@ -8,7 +8,6 @@ namespace CalendarForChessFans
         public void CreateDayScheduleWEvents(string title, List<Event> events, DateTime date)
         {
             li = recreateListByDay(date, events);
-            Console.Clear();
             Console.BufferHeight = 1000;
             string line = new string('-', Console.WindowWidth - 6);
 
@@ -19,7 +18,7 @@ namespace CalendarForChessFans
             int iHolder = 0;
             int currTime = 0;
             writeHours(ref iHolder, 12, ref currTime, li);
-            writeLines(line, 43, false);
+            writeLines(line, 29, false);
             writeHours(ref iHolder, 25, ref currTime, li);
             writeLines(line, 52, true);
         }

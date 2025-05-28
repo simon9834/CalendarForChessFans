@@ -1,23 +1,7 @@
 ﻿using CalendarForChessFans;
-using Spectre.Console;
 
-var Calendar = new Calendar(2024, 1);
+Controller cl = new Controller();
 
-Color color = Color.Blue3;
-Calendar.HighlightStyle(Style.Parse(color.ToString()));
-Calendar.AddCalendarEvent(2024, 1, 1);
-color = ConsoleColor.Red;
-Calendar.HighlightStyle(Style.Parse(color.ToString()));
-Calendar.AddCalendarEvent(2024, 1, 1);
-AnsiConsole.Write(Calendar);
-Console.WriteLine("aha");
-
-Console.WriteLine();
-Console.WriteLine();
-
-TextAnimation ta = new TextAnimation();
-await Task.Run(() => ta.TextToAnimateWave("SSS", ConsoleColor.Magenta, ConsoleColor.Red));
-
-Day day = new Day();
+cl.welcome();
 
 

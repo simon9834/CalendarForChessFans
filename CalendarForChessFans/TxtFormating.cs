@@ -14,5 +14,11 @@ namespace CalendarForChessFans
             spaces = (Console.WindowWidth - text.Length) / 2;
             return text.PadLeft(spaces);
         }
+        public void warning(string text)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(CenterText(text));
+            Console.ForegroundColor = ConsoleColor.White;
+        }
     }
 }

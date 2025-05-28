@@ -8,6 +8,7 @@ namespace CalendarForChessFans
         private EventStoring es = new EventStoring();
         private EventHandler eh = new EventHandler();
         private List<Event> events = new List<Event>();
+        TxtFormating tf = new TxtFormating();
         private Calendar cr;
         public void loadEventsIntoCalendar()
         {
@@ -22,7 +23,6 @@ namespace CalendarForChessFans
         {
             this.cr = cr;
             UpdateEvents();
-            Console.Clear();
             AnsiConsole.Write(cr);
         }
 
