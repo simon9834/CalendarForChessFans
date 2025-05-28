@@ -11,11 +11,10 @@ namespace CalendarForChessFans
 {
     public class Day
     {
-        public void CreateDayScheduleWEvents(string title, List<Event> li)
+        public void CreateDayScheduleWEvents(string title, List<Event> li, DateTime date)
         {
             Console.Clear();
             Console.BufferHeight = 1000;
-            sortEventListByDate(li);
             string line = new string('-', Console.WindowWidth - 6);
 
             spaceBarTop();
@@ -121,7 +120,7 @@ namespace CalendarForChessFans
             }
         }
         public void spaceBarTop() { for (int i = 0; i < 2; i++) Console.WriteLine(); }
-        public void sortEventListByDate(List<Event> li)
+        /*public void sortEventListByDate(List<Event> li) //completely useless but why not
         {
             li.Sort((a, b) =>
             {
@@ -130,7 +129,7 @@ namespace CalendarForChessFans
                 if (b == null) return -1;
                 return (int)a.Start - (int)b.Start;
             });
-        }
+        }*/
         public ConsoleColor OppositeColorOf(ConsoleColor color)
         {
             return color switch
@@ -153,6 +152,15 @@ namespace CalendarForChessFans
                 ConsoleColor.DarkGray => ConsoleColor.White,
                 _ => ConsoleColor.Black
             };
+        }
+        public List<Event> recreateListByDay(DateTime date, List<Event> li)
+        {
+            List<Event> events = new List<Event>();
+            foreach (Event e in li)
+            {
+                if(e.Date == date || e.DateOptStart == date) events.Add(e);
+            }
+            return events;
         }
     }
 }

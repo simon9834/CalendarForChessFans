@@ -4,7 +4,7 @@ namespace CalendarForChessFans
 {
     public class EventStoring
     {
-        private const string filepath = "filepath mega";
+        private const string filepath = "events.txt";
         public void SaveEvents(List<Event> events)
         {
             var json = JsonConvert.SerializeObject(events, Newtonsoft.Json.Formatting.Indented);

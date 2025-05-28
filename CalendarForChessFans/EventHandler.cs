@@ -74,5 +74,10 @@ namespace CalendarForChessFans
             else
                 return ConsoleColor.Red;
         }
+        public void createEvent()
+        {
+            //Event ev = new Event();
+            //implement logic for interaction w user to create an event
+        }
     }
 }
