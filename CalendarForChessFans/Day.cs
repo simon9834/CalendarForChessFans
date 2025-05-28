@@ -59,10 +59,12 @@ namespace CalendarForChessFans
             int time;
             int index;
             bool isFilled = false;
+            bool started = false;
             string title = "THREE DAYS GRAZE";
             Console.SetCursorPosition(0, Console.CursorTop);
             for (int i = iHolder; i < max; i++)
             {
+                Console.BackgroundColor = ConsoleColor.Black;
                 if (i > 9)
                 {
                     Console.WriteLine($"{i}");
@@ -73,11 +75,26 @@ namespace CalendarForChessFans
                 }
 
                 time = currTime;
+
                 if ((index = li.FindIndex(element => element.Start == time)) != -1)
                 {
                     isFilled = true;
                     title = li[index].Title;
-                    //Console.BackgroundColor = li[index].color;      Convert color rightly and set text color as opposite
+                    Console.BackgroundColor = li[index].color;
+                    if (started)
+                    {
+                        started = false;
+                    }
+                }
+
+                if (started)
+                {
+                    Console.BackgroundColor = li[index].color;
+                    if (li[index].End == time)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Black;
+                        started = false;
+                    }
                 }
 
                 if (i == (max - 1))
@@ -92,10 +109,9 @@ namespace CalendarForChessFans
                 else
                 {
                     Console.WriteLine(title);
-                    Console.BackgroundColor = ConsoleColor.Black;
                 }
 
-                    currTime++;
+                currTime++;
             }
         }
         public void spaceBarTop() { for (int i = 0; i < 2; i++) Console.WriteLine(); }
@@ -108,6 +124,29 @@ namespace CalendarForChessFans
                 if (b == null) return -1;
                 return (int)a.Start - (int)b.Start;
             });
+        }
+        public ConsoleColor OppositeColorOf(ConsoleColor color)
+        {
+            return color switch
+            {
+                ConsoleColor.Black => ConsoleColor.White,
+                ConsoleColor.White => ConsoleColor.Black,
+                ConsoleColor.DarkBlue => ConsoleColor.Yellow,
+                ConsoleColor.Blue => ConsoleColor.Yellow,
+                ConsoleColor.DarkGreen => ConsoleColor.Magenta,
+                ConsoleColor.Green => ConsoleColor.Magenta,
+                ConsoleColor.DarkCyan => ConsoleColor.Red,
+                ConsoleColor.Cyan => ConsoleColor.Red,
+                ConsoleColor.DarkRed => ConsoleColor.Cyan,
+                ConsoleColor.Red => ConsoleColor.Cyan,
+                ConsoleColor.DarkMagenta => ConsoleColor.Green,
+                ConsoleColor.Magenta => ConsoleColor.Green,
+                ConsoleColor.DarkYellow => ConsoleColor.Blue,
+                ConsoleColor.Yellow => ConsoleColor.DarkBlue,
+                ConsoleColor.Gray => ConsoleColor.Black,
+                ConsoleColor.DarkGray => ConsoleColor.White,
+                _ => ConsoleColor.Black
+            };
         }
     }
 }
