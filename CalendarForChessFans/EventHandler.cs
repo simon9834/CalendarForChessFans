@@ -1,8 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using Spectre.Console;
-using System.Numerics;
-using System.Xml.Linq;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using Spectre.Console;
 
 namespace CalendarForChessFans
 {

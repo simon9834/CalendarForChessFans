@@ -1,18 +1,13 @@
-﻿using Newtonsoft.Json.Linq;
-using Spectre.Console;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Spectre.Console;
 
 namespace CalendarForChessFans
 {
     public class Day
     {
-        public void CreateDayScheduleWEvents(string title, List<Event> li, DateTime date)
+        private List<Event> li = new List<Event>();
+        public void CreateDayScheduleWEvents(string title, List<Event> events, DateTime date)
         {
+            li = recreateListByDay(date, events);
             Console.Clear();
             Console.BufferHeight = 1000;
             string line = new string('-', Console.WindowWidth - 6);
@@ -61,6 +56,7 @@ namespace CalendarForChessFans
             bool isFilled = false;
             bool started = false;
             string title = "THREE DAYS GRAZE";
+
             Console.SetCursorPosition(0, Console.CursorTop);
             for (int i = iHolder; i < max; i++)
             {

@@ -1,8 +1,4 @@
 ﻿
-//using Spectre.Console;
-using Microsoft.VisualBasic;
-using System.Drawing;
-
 namespace CalendarForChessFans
 {
     public class Event
