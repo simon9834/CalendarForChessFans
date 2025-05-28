@@ -1,4 +1,5 @@
-﻿using Spectre.Console;
+﻿using Newtonsoft.Json.Linq;
+using Spectre.Console;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,6 +66,7 @@ namespace CalendarForChessFans
             for (int i = iHolder; i < max; i++)
             {
                 Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = OppositeColorOf(ConsoleColor.Black);
                 if (i > 9)
                 {
                     Console.WriteLine($"{i}");
@@ -79,8 +81,10 @@ namespace CalendarForChessFans
                 if ((index = li.FindIndex(element => element.Start == time)) != -1)
                 {
                     isFilled = true;
-                    title = li[index].Title;
-                    Console.BackgroundColor = li[index].color;
+                    var value = li[index];
+                    title = value.Title;
+                    Console.BackgroundColor = value.color;
+                    Console.ForegroundColor = OppositeColorOf(value.color);
                     if (started)
                     {
                         started = false;
@@ -90,9 +94,11 @@ namespace CalendarForChessFans
                 if (started)
                 {
                     Console.BackgroundColor = li[index].color;
+                    Console.ForegroundColor = OppositeColorOf(li[index].color);
                     if (li[index].End == time)
                     {
                         Console.BackgroundColor = ConsoleColor.Black;
+                        Console.ForegroundColor = OppositeColorOf(ConsoleColor.Black);
                         started = false;
                     }
                 }
