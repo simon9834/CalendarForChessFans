@@ -55,6 +55,7 @@ namespace CalendarForChessFans
             bool isFilled = false;
             bool started = false;
             string title = "THREE DAYS GRAZE";
+            TxtFormating tf = new TxtFormating();
 
             Console.SetCursorPosition(0, Console.CursorTop);
             for (int i = iHolder; i < max; i++)
@@ -87,13 +88,15 @@ namespace CalendarForChessFans
 
                 if (started)
                 {
-                    Console.BackgroundColor = li[index].color;
-                    Console.ForegroundColor = OppositeColorOf(li[index].color);
+                    
                     if (li[index].End == time)
                     {
-                        Console.BackgroundColor = ConsoleColor.Black;
-                        Console.ForegroundColor = OppositeColorOf(ConsoleColor.Black);
                         started = false;
+                    }
+                    else
+                    {
+                        Console.BackgroundColor = li[index].color;
+                        Console.ForegroundColor = OppositeColorOf(li[index].color);
                     }
                 }
 
@@ -108,9 +111,8 @@ namespace CalendarForChessFans
                 }
                 else
                 {
-                    Console.WriteLine(title);
+                    Console.WriteLine(tf.CenterText(title));
                 }
-
                 currTime++;
             }
         }

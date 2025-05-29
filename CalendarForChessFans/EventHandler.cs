@@ -1,4 +1,5 @@
 ﻿using Spectre.Console;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CalendarForChessFans
 {
@@ -70,10 +71,139 @@ namespace CalendarForChessFans
             else
                 return ConsoleColor.Red;
         }
-        public void createEvent()
+        public Event createEvent()
         {
-            //Event ev = new Event();
-            //implement logic for interaction w user to create an event
+            Event ev;
+            string frequency;
+            string title;
+            bool isMoreDays;
+            DateTime date = default;
+            DateTime dateOptStart = default;
+            DateTime dateOptEnd = default;
+            int start = int.MaxValue;
+            int end = int.MaxValue;
+            string location = null;
+            string notes = null;
+            string repeats;
+            ConsoleColor color;
+
+            TxtFormating tf = new TxtFormating();
+            tf.FullyClearConsole();
+            title = animateAndCheck(tf, "Enter the title for the event");
+            isMoreDays = yesNo(animateAndCheck(tf, "Should this event be for more days? Answers: yes, no", "yes", "no"));
+            if (isMoreDays)
+            {
+                tryDate("Enter the starting date of the event, for example: 2025-5-1", ref dateOptStart, tf);
+                tryDate("Enter the ending date of the event, for example: 2025-5-2", ref dateOptEnd, tf, dateOptStart);
+            }
+            else
+            {
+                tryDate("Enter the date of the event, for example: 2025-5-1", ref date, tf);
+                tryTime("Enter the starting hour of the event, for example: 7, 22, 18", ref start, tf);
+                tryTime("Enter the ending hour of the event, for example: 8, 23, 19", ref end, tf, start);
+            }
+            if (yesNo(animateAndCheck(tf, "Do you want to add notes? Answers: yes, no", "yes", "no")))
+            {
+                notes = animateAndCheck(tf, "Enter your notes");
+            }
+            if (yesNo(animateAndCheck(tf, "Do you want to add a location? Answers: yes, no")))
+            {
+                location = animateAndCheck(tf, "Enter your location");
+            }
+            ev = new Event(title, date, isMoreDays, dateOptStart, dateOptEnd, start, end, location, notes);
+            return ev;
+        }
+        public void tryDate(string textShown, ref DateTime obj, TxtFormating tf, DateTime start = default)
+        {
+            Console.Clear();
+            while (true)
+            {
+                if (DateTime.TryParse(animateAndCheck(tf, textShown), out obj))
+                {
+                    if (start != default && obj < start)
+                    {
+                        Console.Clear();
+                        tf.warning("Please enter a date thats after the starting date.");
+                        continue;
+                    }
+                    break;
+                }
+                else
+                {
+                    Console.Clear();
+                    tf.warning("Invalid input. Please try again.");
+                }
+            }
+        }
+        public void tryTime(string textShown, ref int obj, TxtFormating tf, int start = int.MinValue)
+        {
+            Console.Clear();
+            while (true)
+            {
+                if (int.TryParse(animateAndCheck(tf, textShown), out obj))
+                {
+                    if (start != int.MinValue && obj < start)
+                    {
+                        Console.Clear();
+                        tf.warning($"Please enter a value greater than {start}.");
+                        continue;
+                    }
+                    else if (obj > 23)
+                    {
+                        Console.Clear();
+                        tf.warning($"A day has 24 hours at best...");
+                        continue;
+                    }
+                    break;
+                }
+                else
+                {
+                    Console.Clear();
+                    tf.warning("Invalid input. Please enter a number.");
+                }
+            }
+        }
+        private string animateAndCheck(TxtFormating tf, string txt, string wantedText1 = "tralalelotralala", string wantedText2 = "prprpatapim")
+        {
+            string outpt;
+            Console.Clear();
+            while (true)
+            {
+                tf.TextToAnimateWave(tf.CenterText(txt), ConsoleColor.Red, ConsoleColor.Yellow);
+                outpt = Console.ReadLine();
+
+                if (wantedText1 != "tralalelotralala")
+                {
+                    if (outpt.Trim().ToLower() != wantedText1 && outpt.Trim().ToLower() != wantedText2)
+                    {
+                        Console.Clear();
+                        tf.warning("Please enter valid data.");
+                        continue;
+                    }
+                }
+
+                if (outpt == null)
+                {
+                    Console.Clear();
+                    tf.warning("Invalid input. Please try again.");
+                }
+                else
+                {
+                    return outpt;
+                }
+            }
+        }
+        private bool yesNo(string text)
+        {
+            if (text.Trim().ToLower() == "yes")
+            {
+                return true;
+            }
+            if (text.Trim().ToLower() == "no")
+            {
+                return false;
+            }
+            return false;
         }
     }
 }

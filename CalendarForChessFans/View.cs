@@ -8,21 +8,18 @@ namespace CalendarForChessFans
         private EventStoring es = new EventStoring();
         private EventHandler eh = new EventHandler();
         private List<Event> events = new List<Event>();
-        TxtFormating tf = new TxtFormating();
-        private Calendar cr;
         public void loadEventsIntoCalendar()
         {
             events = es.LoadEvents();
         }
-        public void UpdateEvents()
+        public void UpdateEvents(List<Event> events, Calendar cr)
         {
+            this.events = events;
             eh.HighlightEvents(events, cr);
         }
 
         public void Month(Calendar cr)
         {
-            this.cr = cr;
-            UpdateEvents();
             AnsiConsole.Write(cr);
         }
 

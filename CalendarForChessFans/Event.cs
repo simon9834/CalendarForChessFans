@@ -12,23 +12,21 @@ namespace CalendarForChessFans
         public int? End { get; set; }
         public string? Location { get; set; }
         public string? Notes { get; set; }
-        public string? RepeatCycle { get; set; }
         public ConsoleColor color { get; set; }
 
-        public Event(string title, DateTime? date, bool isMoreDays, DateTime? dateOptStart, DateTime? dateOptEnd, int? start, int? end, string? location, string? notes, string? repeats, ConsoleColor color)
+        public Event(string title, DateTime? date, bool isMoreDays, DateTime? dateOptStart, DateTime? dateOptEnd, int? start, int? end, string? location, string? notes, ConsoleColor color)
         {
-            handleCtorAction(title, date, isMoreDays, dateOptStart, dateOptEnd, start, end, location, notes, repeats);
+            handleCtorAction(title, date, isMoreDays, dateOptStart, dateOptEnd, start, end, location, notes);
             this.color = color;
         }
-        public Event(string title, DateTime? date, bool isMoreDays, DateTime dateOptStart, DateTime dateOptEnd, int start, int end, string location, string notes, string repeats)
+        public Event(string title, DateTime? date, bool isMoreDays, DateTime dateOptStart, DateTime dateOptEnd, int start, int end, string? location, string? notes)
         {
-            handleCtorAction(title, date, isMoreDays, dateOptStart, dateOptEnd, start, end, location, notes, repeats);
+            handleCtorAction(title, date, isMoreDays, dateOptStart, dateOptEnd, start, end, location, notes);
             this.color = ConsoleColor.Blue;
         }
-        public void handleCtorAction(string title, DateTime? date, bool isMoreDays, DateTime? dateOptStart, DateTime? dateOptEnd, int? start, int? end, string? location, string? notes, string? repeats)
+        public void handleCtorAction(string title, DateTime? date, bool isMoreDays, DateTime? dateOptStart, DateTime? dateOptEnd, int? start, int? end, string? location, string? notes)
         {
             Title = title;
-            RepeatCycle = repeats;
 
             if (isMoreDays)
             {
@@ -62,6 +60,7 @@ namespace CalendarForChessFans
             }
             else
             {
+                Notes = notes;
                 this.Location = location;
             }
         }
