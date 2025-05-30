@@ -1,10 +1,12 @@
 ﻿using Spectre.Console;
+using System.Transactions;
 
 namespace CalendarForChessFans
 {
     public class Day
     {
         private List<Event> li = new List<Event>();
+        private bool goes;
         public void CreateDayScheduleWEvents(string title, List<Event> events, DateTime date)
         {
             li = recreateListByDay(date, events);
@@ -16,10 +18,9 @@ namespace CalendarForChessFans
             spaceBarTop();
 
             int iHolder = 0;
-            int currTime = 0;
-            writeHours(ref iHolder, 12, ref currTime, li);
+            writeHours(ref iHolder, 12, li);
             writeLines(line, 29, false);
-            writeHours(ref iHolder, 25, ref currTime, li);
+            writeHours(ref iHolder, 25, li, 12);
             writeLines(line, 52, true);
         }
         public void writeLines(string line, int height, bool onemore)
@@ -47,14 +48,15 @@ namespace CalendarForChessFans
                     }
                 }
             }
+            if(onemore) Console.SetCursorPosition(0, Console.CursorTop);
         }
-        public void writeHours(ref int iHolder, int max, ref int currTime, List<Event> li)
+        public void writeHours(ref int iHolder, int max, List<Event> li, int addedHours = 0)
         {
-            int time;
-            int index;
+            int index = 0;
             bool isFilled = false;
             bool started = false;
-            string title = "THREE DAYS GRAZE";
+            if(goes) started = true;
+            string title = "THREE DAYS GRACE";
             TxtFormating tf = new TxtFormating();
 
             Console.SetCursorPosition(0, Console.CursorTop);
@@ -71,9 +73,7 @@ namespace CalendarForChessFans
                     Console.WriteLine($"0{i}");
                 }
 
-                time = currTime;
-
-                if ((index = li.FindIndex(element => element.Start == time)) != -1)
+                if ((index = li.FindIndex(element => element.Start == (i + addedHours))) != -1)
                 {
                     isFilled = true;
                     var value = li[index];
@@ -84,12 +84,16 @@ namespace CalendarForChessFans
                     {
                         started = false;
                     }
+                    else
+                    {
+                        started = true;
+                    }   
                 }
 
                 if (started)
                 {
                     
-                    if (li[index].End == time)
+                    if (li[index].End == (i + addedHours))
                     {
                         started = false;
                     }
@@ -113,8 +117,8 @@ namespace CalendarForChessFans
                 {
                     Console.WriteLine(tf.CenterText(title));
                 }
-                currTime++;
             }
+            if (started) goes = true;
         }
         public void spaceBarTop() { for (int i = 0; i < 2; i++) Console.WriteLine(); }
         /*public void sortEventListByDate(List<Event> li) //completely useless but why not

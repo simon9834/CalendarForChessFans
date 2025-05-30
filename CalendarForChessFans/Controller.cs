@@ -7,7 +7,7 @@ namespace CalendarForChessFans
     public class Controller
     {
         // Debug hours and formating in events in day. Create exporting mechanics and loading back
-        private Calendar cl;
+        private Calendar cl = new Calendar(new DateTime(2025 - 5));
         private TxtFormating tf = new TxtFormating();
         private int year = int.MaxValue;
         private int month = int.MaxValue;
@@ -27,6 +27,12 @@ namespace CalendarForChessFans
         }
         public void tutorial()
         {
+            //for now
+            DateTime dte = new DateTime(2025 - 5 - 5);
+            Event ev = new Event("titlesss", dte, false, dte, dte, 2, 20, null, null);
+            Console.WriteLine(ev.Date);
+            events.Add(ev);
+            //for now
             Console.WriteLine(tf.CenterText("Wanna change month or year? Just write 'change'!"));
             Console.WriteLine(tf.CenterText("Wanna see a specific day? Just write 'day'!"));
             Console.WriteLine(tf.CenterText("Wanna add an event? Just write 'create event'!"));
@@ -63,8 +69,10 @@ namespace CalendarForChessFans
                 {
                     while (true)
                     {
-                        Console.Write("Write chosen command: ");
+                        Console.WriteLine("Write chosen command: ");
                         CheckForKeyWords(Console.ReadLine());
+
+                        //Console.Clear();
                     }
                 }
             }
@@ -85,7 +93,6 @@ namespace CalendarForChessFans
         {
             try
             {
-                Console.Clear();
                 string input;
                 int day;
 
@@ -98,6 +105,7 @@ namespace CalendarForChessFans
                 int daysInMonth = DateTime.DaysInMonth(cl.Year, cl.Month);
                 if (!(day > daysInMonth))
                 {
+                    tf.FullyClearConsole();
                     v.Day(new DateTime(cl.Year, cl.Month, day));
                 }
                 else
@@ -106,6 +114,9 @@ namespace CalendarForChessFans
                     tf.warning($"bruh, do you see any {day} on the month calendar??");
                     UserShowroom();
                 }
+                Console.Write("Press any key to continue");
+                Console.ReadKey();
+                tf.FullyClearConsole();
             }
             catch (Exception ex)
             {
@@ -119,7 +130,7 @@ namespace CalendarForChessFans
         {
             try
             {
-                if(clear) Console.Clear();
+                if (clear) Console.Clear();
                 string input;
                 Console.WriteLine(tf.CenterText("Please enter the year and month below in this format: year.month"));
                 input = Console.ReadLine();
@@ -139,11 +150,12 @@ namespace CalendarForChessFans
                     Console.WriteLine("bruh year has 12 months..");
                     MonthInput(true);
                 }
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 Console.Clear();
                 tf.warning("Invalid input");
-                MonthInput(true);
+                MonthInput();
             }
         }
         public void CheckForKeyWords(string txt)

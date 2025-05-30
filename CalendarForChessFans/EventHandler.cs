@@ -8,6 +8,7 @@ namespace CalendarForChessFans
         private Dictionary<DateTime, int> eventCounter = new Dictionary<DateTime, int>();
         public void HighlightEvents(List<Event> l, Calendar cr)
         {
+            foreach(var el in l) Console.WriteLine(el.Date);
             eventCounter = CreateDictForEventCount(l);
             foreach (Event e in l)
             {
@@ -88,7 +89,6 @@ namespace CalendarForChessFans
             ConsoleColor color;
 
             TxtFormating tf = new TxtFormating();
-            tf.FullyClearConsole();
             title = animateAndCheck(tf, "Enter the title for the event");
             isMoreDays = yesNo(animateAndCheck(tf, "Should this event be for more days? Answers: yes, no", "yes", "no"));
             if (isMoreDays)

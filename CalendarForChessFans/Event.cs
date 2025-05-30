@@ -30,7 +30,6 @@ namespace CalendarForChessFans
 
             if (isMoreDays)
             {
-                this.isMoreDays = true;
                 this.DateOptStart = dateOptStart;
                 this.DateOptEnd = dateOptEnd;
                 this.Date = null;
@@ -39,7 +38,6 @@ namespace CalendarForChessFans
             }
             else
             {
-                this.isMoreDays = false;
                 this.DateOptStart = null;
                 this.DateOptEnd = null;
                 this.Date = date;
@@ -61,7 +59,6 @@ namespace CalendarForChessFans
             else
             {
                 Notes = notes;
-                this.Location = location;
             }
         }
     }
