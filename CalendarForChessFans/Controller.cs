@@ -27,12 +27,6 @@ namespace CalendarForChessFans
         }
         public void tutorial()
         {
-            //for now
-            DateTime dte = new DateTime(2025 - 5 - 5);
-            Event ev = new Event("titlesss", dte, false, dte, dte, 2, 20, null, null);
-            Console.WriteLine(ev.Date);
-            events.Add(ev);
-            //for now
             Console.WriteLine(tf.CenterText("Wanna change month or year? Just write 'change'!"));
             Console.WriteLine(tf.CenterText("Wanna see a specific day? Just write 'day'!"));
             Console.WriteLine(tf.CenterText("Wanna add an event? Just write 'create event'!"));

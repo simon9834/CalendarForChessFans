@@ -6,7 +6,7 @@ namespace CalendarForChessFans
     public class Day
     {
         private List<Event> li = new List<Event>();
-        private bool goes;
+        private bool goes = false;
         public void CreateDayScheduleWEvents(string title, List<Event> events, DateTime date)
         {
             li = recreateListByDay(date, events);
@@ -118,7 +118,15 @@ namespace CalendarForChessFans
                     Console.WriteLine(tf.CenterText(title));
                 }
             }
-            if (started) goes = true;
+            if (started)
+            {
+                goes = true;
+            }
+            else
+            {
+                goes = false;
+            }
+                
         }
         public void spaceBarTop() { for (int i = 0; i < 2; i++) Console.WriteLine(); }
         /*public void sortEventListByDate(List<Event> li) //completely useless but why not
