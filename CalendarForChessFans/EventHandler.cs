@@ -1,5 +1,4 @@
 ﻿using Spectre.Console;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CalendarForChessFans
 {
@@ -76,6 +75,7 @@ namespace CalendarForChessFans
         }
         public Event createEvent()
         {
+            // HANDLE BAD DAYS IN MONTH
             Event ev;
             string frequency;
             string title;

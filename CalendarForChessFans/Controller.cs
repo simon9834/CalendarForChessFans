@@ -10,22 +10,31 @@ namespace CalendarForChessFans
         private Calendar cl = new Calendar(new DateTime(2025 - 5));
         private TxtFormating tf = new TxtFormating();
         private EventHandler eh = new EventHandler();
+        private EventStoring es = new EventStoring();
+        private View v = new View();
         private int year = int.MaxValue;
         private int month = int.MaxValue;
         private Dictionary<string, Action> actions;
         public List<Event> events = new List<Event>();
-        private View v = new View();
+        
+        //FIX DATES LOADING FROM 0001 TO 2001
         public Controller()
         {
             actions = new Dictionary<string, Action>(StringComparer.OrdinalIgnoreCase)
             {
-                ["exit"] = () => Environment.Exit(0),
+                ["exit"] = exit,
                 ["day"] = DayInput,
                 ["change"] = GetStarted,
                 ["create event"] = createEvent,
                 ["help"] = tutorial,
                 ["open event"] = checkoutEvent,
             };
+        }
+        public void exit()
+        {
+            EventStoring es = new EventStoring();
+            es.SaveEvents(events);
+            Environment.Exit(0);
         }
         public void tutorial()
         {
@@ -44,11 +53,15 @@ namespace CalendarForChessFans
             );
             events.Add(testEvent);
             //testing end
+            Console.BackgroundColor = ConsoleColor.DarkGreen;
+            Console.ForegroundColor = ConsoleColor.Black;
             Console.WriteLine(tf.CenterText("Wanna change month or year? Just write 'change'!"));
             Console.WriteLine(tf.CenterText("Wanna see a specific day? Just write 'day'!"));
             Console.WriteLine(tf.CenterText("Wanna add an event? Just write 'create event'!"));
             Console.WriteLine(tf.CenterText("Wanna revisit this tutorial? Just write 'help'!"));
+            Console.WriteLine(tf.CenterText("Wanna see an event you created? Just write 'open event'!"));
             Console.WriteLine(tf.CenterText("Wanna exit from app? Just write 'exit'."));
+            tf.resetColors();
         }
         public void checkoutEvent()
         {
@@ -81,6 +94,14 @@ namespace CalendarForChessFans
         }
         public void welcome()
         {
+            try
+            {
+                var evs = es.LoadEvents();
+                events = (evs == null) ? events : evs;
+            }catch (NullReferenceException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
             Console.WriteLine(tf.CenterText("Hello!"));
             Console.WriteLine();
             tutorial();
@@ -137,6 +158,7 @@ namespace CalendarForChessFans
 
             Console.WriteLine(tf.CenterText("Write the days number below"));
             input = tf.ReadCenteredInput();
+            CheckForKeyWords(input, true);
             day = int.Parse(input);
             v.UpdateEvents(events, cl);
 
@@ -173,6 +195,7 @@ namespace CalendarForChessFans
             string input;
             tf.TextToAnimateWave(tf.CenterText("Please enter the year and month below in this format: year.month"));
             input = tf.ReadCenteredInput();
+            CheckForKeyWords(input, true);
             string[] dateList = input.Trim().Split('.');
 
             month = int.Parse(dateList[1]);
@@ -197,7 +220,7 @@ namespace CalendarForChessFans
                 MonthInput();
             }*/
         }
-        public void CheckForKeyWords(string txt, bool ignoreWar)
+        public void CheckForKeyWords(string txt, bool ignoreWar = false)
         {
             if (actions.TryGetValue(txt.Trim().ToLower(), out Action method))
             {
