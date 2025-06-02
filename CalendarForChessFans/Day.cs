@@ -5,102 +5,79 @@ namespace CalendarForChessFans
 {
     public class Day
     {
+        private TxtFormating tf = new TxtFormating();
         private List<Event> li = new List<Event>();
         private bool goes = false;
         public void CreateDayScheduleWEvents(string title, List<Event> events, DateTime date)
         {
+            //debugging
+            //Console.WriteLine($"lists size: {events.Count}");
+            //debugging end
             li = recreateListByDay(date, events);
             Console.BufferHeight = 1000;
-            string line = new string('-', Console.WindowWidth - 6);
+            string line = new string('-', Console.WindowWidth - 2);
 
             spaceBarTop();
             AnsiConsole.Write(new FigletText(FigletFont.Default, title).Centered());
             spaceBarTop();
 
             int iHolder = 0;
-            writeHours(ref iHolder, 12, li);
+            int index = 0;
+            writeHours(ref iHolder, 12, li, ref index);
             writeLines(line, 29, false);
-            writeHours(ref iHolder, 25, li, 12);
+            writeHours(ref iHolder, 25, li, ref index);
             writeLines(line, 52, true);
         }
         public void writeLines(string line, int height, bool onemore)
         {
-            Console.SetCursorPosition(5, Console.CursorTop - height);
+            tf.resetColors();
+            Console.SetCursorPosition(2, Console.CursorTop - height);
             int max = 24;
-            if (onemore) max++;
+            if (onemore) max += 2;
 
-            for (int i = 0; i < max; i++)
+            for (int i = 0; i < max; i += 2)
             {
-                if (i % 2 == 0 || i == 0)
-                {
-                    Console.Write(line);
-                    Console.SetCursorPosition(5, Console.CursorTop + 1);
-                }
-                else
-                {
-                    if (i != max - 1)
-                    {
-                        Console.SetCursorPosition(5, Console.CursorTop + 1);
-                    }
-                    else
-                    {
-                        Console.WriteLine();
-                    }
-                }
+                Console.Write(line);
+                Console.SetCursorPosition(2, Console.CursorTop + 2);
             }
-            if(onemore) Console.SetCursorPosition(0, Console.CursorTop);
         }
-        public void writeHours(ref int iHolder, int max, List<Event> li, int addedHours = 0)
+        public void writeHours(ref int iHolder, int max, List<Event> li, ref int index)
         {
-            int index = 0;
-            bool isFilled = false;
+            int tempIndex = 0;
             bool started = false;
-            if(goes) started = true;
             string title = "THREE DAYS GRACE";
-            TxtFormating tf = new TxtFormating();
-
+            if (goes)
+            {
+                started = true;
+                title = li[index].Title;
+            }
             Console.SetCursorPosition(0, Console.CursorTop);
             for (int i = iHolder; i < max; i++)
             {
-                Console.BackgroundColor = ConsoleColor.Black;
-                Console.ForegroundColor = OppositeColorOf(ConsoleColor.Black);
-                if (i > 9)
-                {
-                    Console.WriteLine($"{i}");
-                }
-                else
-                {
-                    Console.WriteLine($"0{i}");
-                }
+                tf.resetColors();
+                Console.WriteLine(i > 9 ? $"{i}" : $"0{i}");
 
-                if ((index = li.FindIndex(element => element.Start == (i + addedHours))) != -1)
+                if ((tempIndex = li.FindIndex(element => element.Start == i)) != -1)
                 {
-                    isFilled = true;
+                    index = tempIndex;
                     var value = li[index];
                     title = value.Title;
                     Console.BackgroundColor = value.color;
                     Console.ForegroundColor = OppositeColorOf(value.color);
-                    if (started)
-                    {
-                        started = false;
-                    }
-                    else
-                    {
-                        started = true;
-                    }   
+                    started = !started;
                 }
 
                 if (started)
                 {
-                    
-                    if (li[index].End == (i + addedHours))
+                    var currentEvent = li[index];
+                    if (currentEvent.End <= i)
                     {
                         started = false;
                     }
                     else
                     {
-                        Console.BackgroundColor = li[index].color;
-                        Console.ForegroundColor = OppositeColorOf(li[index].color);
+                        Console.BackgroundColor = currentEvent.color;
+                        Console.ForegroundColor = OppositeColorOf(currentEvent.color);
                     }
                 }
 
@@ -108,37 +85,12 @@ namespace CalendarForChessFans
                 {
                     iHolder = i + 1;
                 }
-
-                if (!isFilled)
-                {
-                    Console.WriteLine();
-                }
-                else
-                {
-                    Console.WriteLine(tf.CenterText(title));
-                }
+                Console.WriteLine(started ? tf.CenterText(title) : "");
+                tf.resetColors();
             }
-            if (started)
-            {
-                goes = true;
-            }
-            else
-            {
-                goes = false;
-            }
-                
+            goes = started;
         }
         public void spaceBarTop() { for (int i = 0; i < 2; i++) Console.WriteLine(); }
-        /*public void sortEventListByDate(List<Event> li) //completely useless but why not
-        {
-            li.Sort((a, b) =>
-            {
-                if (a == null && b == null) return 0;
-                if (a == null) return 1;
-                if (b == null) return -1;
-                return (int)a.Start - (int)b.Start;
-            });
-        }*/
         public ConsoleColor OppositeColorOf(ConsoleColor color)
         {
             return color switch
@@ -167,7 +119,7 @@ namespace CalendarForChessFans
             List<Event> events = new List<Event>();
             foreach (Event e in li)
             {
-                if(e.Date == date || e.DateOptStart == date) events.Add(e);
+                if (e.Date == date || e.DateOptStart == date) events.Add(e);
             }
             return events;
         }

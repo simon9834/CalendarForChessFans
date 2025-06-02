@@ -5,10 +5,10 @@ namespace CalendarForChessFans
 {
     public class EventHandler
     {
+        private TxtFormating tf = new TxtFormating();
         private Dictionary<DateTime, int> eventCounter = new Dictionary<DateTime, int>();
         public void HighlightEvents(List<Event> l, Calendar cr)
         {
-            foreach(var el in l) Console.WriteLine(el.Date);
             eventCounter = CreateDictForEventCount(l);
             foreach (Event e in l)
             {
@@ -19,8 +19,10 @@ namespace CalendarForChessFans
                 }
                 else if (e.DateOptStart != null && e.DateOptEnd != null)
                 {
+                    Console.WriteLine(e.DateOptStart.ToString() + "," + e.DateOptEnd.ToString());
                     for (DateTime date = (DateTime)e.DateOptStart; date <= e.DateOptEnd; date = date.AddDays(1))
                     {
+                        Console.WriteLine(date.ToString());
                         cr.HighlightStyle = Style.Parse(ConsoleColor.Green.ToString());
                         cr.AddCalendarEvent(date);
                     }
@@ -88,7 +90,6 @@ namespace CalendarForChessFans
             string repeats;
             ConsoleColor color;
 
-            TxtFormating tf = new TxtFormating();
             title = animateAndCheck(tf, "Enter the title for the event");
             isMoreDays = yesNo(animateAndCheck(tf, "Should this event be for more days? Answers: yes, no", "yes", "no"));
             if (isMoreDays)
@@ -142,7 +143,7 @@ namespace CalendarForChessFans
             {
                 if (int.TryParse(animateAndCheck(tf, textShown), out obj))
                 {
-                    if (start != int.MinValue && obj < start)
+                    if (start != int.MinValue && obj <= start)
                     {
                         Console.Clear();
                         tf.warning($"Please enter a value greater than {start}.");
@@ -204,6 +205,43 @@ namespace CalendarForChessFans
                 return false;
             }
             return false;
+        }
+        public void DisplayEvent(Event ev)
+        {
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.WriteLine(tf.CenterText("╔══════════════════════════════╗"));
+            Console.WriteLine(tf.CenterText("║         EVENT DETAILS        ║"));
+            Console.WriteLine(tf.CenterText("╚══════════════════════════════╝"));
+            Console.ForegroundColor = ev.color;
+            AnsiConsole.Write(new FigletText(FigletFont.Default, ev.Title).Centered());
+            tf.resetColors();
+            Console.BackgroundColor = ConsoleColor.Yellow;
+            Console.ForegroundColor = ConsoleColor.DarkBlue;
+            if (ev.isMoreDays)
+            {
+                Console.WriteLine(tf.CenterText($"From: {ev.DateOptStart:yyyy-MM-dd}"));
+                Console.WriteLine(tf.CenterText($"To:   {ev.DateOptEnd:yyyy-MM-dd}"));
+            }
+            else
+            {
+                Console.WriteLine(tf.CenterText($"Date:  {ev.Date:yyyy-MM-dd}"));
+                Console.WriteLine(tf.CenterText($"Time:  {ev.Start}:00 - {ev.End}:00"));
+            }
+            if (!string.IsNullOrWhiteSpace(ev.Location))
+            {
+                Console.WriteLine(tf.CenterText($"Location: {ev.Location}"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(ev.Notes))
+            {
+                Console.WriteLine(tf.CenterText($"Notes: {ev.Notes}"));
+            }
+
+            tf.resetColors();
+            Console.WriteLine();
+            Console.WriteLine(tf.CenterText("[Press any key to return]"));
+            Console.ReadKey();
+            Console.CursorVisible = true;
         }
     }
 }

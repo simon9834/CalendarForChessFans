@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿
 using System.Text;
-using System.Threading.Tasks;
 
 namespace CalendarForChessFans
 {
@@ -10,9 +7,20 @@ namespace CalendarForChessFans
     {
         public string CenterText(string text)
         {
-            int spaces = 0;
-            spaces = (Console.WindowWidth - text.Length) / 2;
-            return text.PadLeft(spaces);
+            int totalWidth = Console.WindowWidth;
+            int spacesBefore = Math.Max((totalWidth - text.Length) / 2, 0);
+            string padded = new string(' ', spacesBefore) + text;
+
+            if (padded.Length < totalWidth)
+            {
+                padded = padded.PadRight(totalWidth);
+            }
+            else if (padded.Length > totalWidth)
+            {
+                padded = padded.Substring(0, totalWidth);
+            }
+
+            return padded;
         }
         public void warning(string text)
         {
@@ -20,32 +28,28 @@ namespace CalendarForChessFans
             Console.WriteLine(CenterText(text));
             Console.ForegroundColor = ConsoleColor.White;
         }
-        public void TextToAnimateWave(string text, ConsoleColor highlightCol, ConsoleColor finalCol)
+        public void TextToAnimateWave(string text, ConsoleColor highlightCol = ConsoleColor.DarkRed, ConsoleColor finalCol = ConsoleColor.Yellow)
         {
             Console.CursorVisible = false;
             Console.ForegroundColor = ConsoleColor.Black;
             Console.Write(text);
             char[] charArr = text.ToCharArray();
-            for (int i = 0; i < text.Length; i++)
+            int indexOfFirstLetter = Array.FindIndex(charArr, c => !char.IsWhiteSpace(c));
+            int maxIndex = Array.FindLastIndex(charArr, c => !char.IsWhiteSpace(c));
+
+            for (int i = indexOfFirstLetter; i <= maxIndex; i++)
             {
                 Console.ForegroundColor = highlightCol;
                 Console.SetCursorPosition(i, Console.CursorTop);
                 Console.Write(char.ToUpper(charArr[i]));
 
-                if (charArr[i] == ' ')
-                {
-                    Task.Delay(100).Wait();
-                }
-                else
-                {
-                    Task.Delay(50).Wait();
-                }
+                Task.Delay((charArr[i] == ' ') ? 100 : 50).Wait();
 
                 Console.ForegroundColor = finalCol;
                 Console.SetCursorPosition(i, Console.CursorTop);
                 Console.Write(char.ToLower(charArr[i]));
             }
-            Console.ForegroundColor = ConsoleColor.White;
+            resetColors();
             Console.CursorVisible = true;
             Console.WriteLine();
         }
@@ -62,6 +66,60 @@ namespace CalendarForChessFans
                 Console.WriteLine(new string(' ', bufferWidth));
             }
             Console.SetCursorPosition(0, 0);
+        }
+        public void resetColors()
+        {
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.BackgroundColor = ConsoleColor.Black;
+        }
+        public string ReadCenteredInput()
+        {
+            try
+            {
+                Console.CursorVisible = false;
+                StringBuilder input = new StringBuilder();
+                ConsoleKeyInfo key;
+
+                int top = Console.CursorTop;
+
+                while (true)
+                {
+                    key = Console.ReadKey(intercept: true);
+
+                    if (key.Key == ConsoleKey.Enter)
+                    {
+                        Console.WriteLine();
+                        break;
+                    }
+                    else if (key.Key == ConsoleKey.Backspace)
+                    {
+                        if (input.Length > 0)
+                        {
+                            input.Remove(input.Length - 1, 1);
+                        }
+                    }
+                    else if (!char.IsControl(key.KeyChar))
+                    {
+                        input.Append(key.KeyChar);
+                    }
+
+                    // Re-center the text
+                    Console.SetCursorPosition(0, top);
+                    Console.Write(new string(' ', Console.WindowWidth));
+
+                    int left = Math.Max((Console.WindowWidth - input.Length) / 2, 0);
+                    Console.SetCursorPosition(left, top);
+                    Console.Write(input.ToString());
+                }
+                Console.CursorVisible = false;
+                return input.ToString();
+
+            }
+            catch (Exception ex)
+            {
+                warning("Smth went wrong here bro: " + ex.Message);
+                return string.Empty;
+            }
         }
     }
 }

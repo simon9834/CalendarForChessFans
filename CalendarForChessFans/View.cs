@@ -17,6 +17,10 @@ namespace CalendarForChessFans
             this.events = events;
             eh.HighlightEvents(events, cr);
         }
+        public void Event(Event ev)
+        {
+            eh.DisplayEvent(ev);
+        }
 
         public void Month(Calendar cr)
         {
