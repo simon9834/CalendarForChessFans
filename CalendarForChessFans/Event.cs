@@ -38,7 +38,7 @@ namespace CalendarForChessFans
         }
         public void handleCtorAction(string title, DateTime? date, bool isMoreDays, DateTime? dateOptStart, DateTime? dateOptEnd, int? start, int? end, string? location, string? notes, LABEL label)
         {
-            label = label;
+            this.label = label;
             Title = title;
             this.isMoreDays = isMoreDays;
             if (isMoreDays)

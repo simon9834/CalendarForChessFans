@@ -122,7 +122,7 @@ namespace CalendarForChessFans
         {
             while (true)
             {
-                Console.WriteLine(tf.TextToAnimateWave("Please choose a label that fits your event"));
+                tf.TextToAnimateWave(tf.CenterText("Please choose a label that fits your event"));
                 string input;
                 foreach (Event.LABEL l in Enum.GetValues(typeof(Event.LABEL)))
                 {

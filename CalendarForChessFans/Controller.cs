@@ -22,7 +22,8 @@ namespace CalendarForChessFans
                 ["change date"] = GetStarted,
                 ["create event"] = createEvent,
                 ["help"] = tutorial,
-                ["open event"] = checkoutEvent,
+                ["find event"] = checkoutEvent,
+                ["find label"] = searchInLabels,
             };
         }
         public void exit()
@@ -37,6 +38,42 @@ namespace CalendarForChessFans
             Console.ReadKey();
             Console.Clear();
         }
+        public void searchInLabels()
+        {
+            while (true)
+            {
+                tf.TextToAnimateWave(tf.CenterText("Write the label you want to search for from this list: "));
+                foreach (Event.LABEL l in Enum.GetValues(typeof(Event.LABEL)))
+                {
+                    Console.WriteLine(tf.CenterText($"{l}"));
+                }
+                string input = tf.ReadCenteredInput();
+                if (CheckForKeyWords(input, true)) UserShowroom();
+                Console.Clear();
+                if(input.Contains(' '))
+                {
+                    input = input.Replace(" ", "");
+                }
+                var filteredEvents = events.Where(e => e.label.ToString().ToLower().Equals(input.Trim(), StringComparison.OrdinalIgnoreCase)).ToList();
+                if (filteredEvents.Count > 0)
+                {
+                    Console.BackgroundColor = ConsoleColor.DarkBlue;
+                    Console.ForegroundColor = ConsoleColor.White;
+                    foreach (var ev in filteredEvents)
+                    {
+                        Console.WriteLine(tf.CenterText($"Event: {ev.Title}"));
+                    }
+                    tf.resetColors();
+                    getOut();
+                    break;
+                }
+                else
+                {
+                    tf.warning("No events found with that label.");
+                    continue;
+                }
+            }
+        }
         public void tutorial()
         {
             Console.BackgroundColor = ConsoleColor.DarkGreen;
@@ -45,7 +82,8 @@ namespace CalendarForChessFans
             Console.WriteLine(tf.CenterText("Wanna see a specific day? Just write 'day'!"));
             Console.WriteLine(tf.CenterText("Wanna add an event? Just write 'create event'!"));
             Console.WriteLine(tf.CenterText("Wanna revisit this tutorial? Just write 'help'!"));
-            Console.WriteLine(tf.CenterText("Wanna see an event you created? Just write 'open event'!"));
+            Console.WriteLine(tf.CenterText("Wanna see an event you created? Just write 'find event'!"));
+            Console.WriteLine(tf.CenterText("Wanna search for events by label? Just write 'find label'!"));
             Console.WriteLine(tf.CenterText("Wanna exit from app? Just write 'exit'."));
             tf.resetColors();
             getOut();
@@ -82,7 +120,19 @@ namespace CalendarForChessFans
         }
         public void welcome()
         {
-
+            Event chessEvent = new Event(
+            title: "City Chess Championship",
+            date: new DateTime(2025, 6, 20),
+            isMoreDays: false,
+            dateOptStart: DateTime.MinValue, // ignored since isMoreDays is false
+            dateOptEnd: DateTime.MinValue,   // ignored since isMoreDays is false
+            start: 10,
+            end: 16,
+            location: "Central Chess Club",
+            notes: "Bring your own board.",
+            label: Event.LABEL.chessTournament
+            );
+            events.Add(chessEvent);
             try
             {
                 var evs = es.LoadEvents();
