@@ -31,22 +31,9 @@ This application is a hobby-focused calendar/planner designed around the theme o
 
 ---
 
-## 📂 Project Structure
-
-CalendarForChessFans/
-├── Controller.cs         // Main logic and routing
-├── Event.cs              // Event class with label enum
-├── EventStoring.cs       // Load/save JSON events
-├── View.cs               // UI rendering logic
-├── TxtFormating.cs       // Console effects and animations
-├── ChessApi.cs           // Chess API handler
-└── data/                 // Saved data
-
----
-
 ## 🛠 Technologies Used
 
-- **C# (.NET 6 or later)**
+- **C# .NET 9**
 - **Spectre.Console** for styled terminal interface
 - **System.Text.Json** for data storage
 - **HttpClient** for API access
@@ -75,7 +62,7 @@ dotnet run
 | day            | Show specific day and its events           |
 | create event   | Add a new event to the calendar            |
 | find event     | Search for an event by title               |
-| find label     | Filter events by tag/label                 |
+| find label     | Filter events by tag                       |
 | remove event   | Delete an event by title                   |
 | help           | Show tutorial                              |
 | exit           | Save and close the app                     |
@@ -101,21 +88,7 @@ This project optionally fetches the latest chess game from a public source.
 
 Latest Game: Magnus Carlsen vs Hikaru Nakamura  
 Result: 1-0  
-Time Control: Blitz (3+2)
-
-Supported APIs:
-- Lichess API (https://lichess.org/api)
-- Chess.com Public API (https://www.chess.com/news/view/published-data-api)
-
-Note: Some API endpoints may require authentication or have rate limits.
-
----
-
-## 🔒 Limitations
-
-- No export to PDF/CSV (only JSON export)
-- No icon customization for executable
-- Works via console only (no graphical interface)
+Time Control: 5 minutes + 3 seconds
 
 ---
 
@@ -137,12 +110,5 @@ This project is open-source under the MIT License.
 ## 👤 Author
 
 Made with passion for chess and development.  
-Author: Your Name / GitHub handle
+Author: Šimon Juda Hloska
 
----
-
-## 🔗 Useful Links
-
-- Spectre.Console (https://spectreconsole.net/)
-- Chess.com API Docs (https://www.chess.com/news/view/published-data-api)
-- Lichess API Reference (https://lichess.org/api)
