@@ -1,4 +1,6 @@
 ﻿using Spectre.Console;
+using System.Numerics;
+using System.Reflection.Emit;
 
 namespace CalendarForChessFans
 {
@@ -18,10 +20,8 @@ namespace CalendarForChessFans
                 }
                 else if (e.DateOptStart != null && e.DateOptEnd != null)
                 {
-                    Console.WriteLine(e.DateOptStart.ToString() + "," + e.DateOptEnd.ToString());
                     for (DateTime date = (DateTime)e.DateOptStart; date <= e.DateOptEnd; date = date.AddDays(1))
                     {
-                        Console.WriteLine(date.ToString());
                         cr.HighlightStyle = Style.Parse(ConsoleColor.Green.ToString());
                         cr.AddCalendarEvent(date);
                     }
@@ -75,11 +75,11 @@ namespace CalendarForChessFans
         }
         public Event createEvent()
         {
-            // HANDLE BAD DAYS IN MONTH
             Event ev;
             string frequency;
             string title;
             bool isMoreDays;
+            Event.LABEL label = Event.LABEL.nonChessEvent;
             DateTime date = default;
             DateTime dateOptStart = default;
             DateTime dateOptEnd = default;
@@ -111,28 +111,66 @@ namespace CalendarForChessFans
             {
                 location = animateAndCheck(tf, "Enter your location");
             }
-            ev = new Event(title, date, isMoreDays, dateOptStart, dateOptEnd, start, end, location, notes);
+            if(yesNo(animateAndCheck(tf, "Is this a chess event? Answers: yes, no")))
+            {
+                label = assignLabel();
+            }
+            ev = new Event(title, date, isMoreDays, dateOptStart, dateOptEnd, start, end, location, notes, label);
             return ev;
+        }
+        public Event.LABEL assignLabel()
+        {
+            while (true)
+            {
+                Console.WriteLine(tf.TextToAnimateWave("Please choose a label that fits your event"));
+                string input;
+                foreach (Event.LABEL l in Enum.GetValues(typeof(Event.LABEL)))
+                {
+                    Console.WriteLine(tf.CenterText($"{(int)l} - {l}"));
+                }
+                input = tf.ReadCenteredInput();
+                if (int.TryParse(input, out int selectedValue) && Enum.IsDefined(typeof(Event.LABEL), selectedValue))
+                {
+                    Event.LABEL selectedTitle = (Event.LABEL)selectedValue;
+                    return selectedTitle;
+                }
+            }
         }
         public void tryDate(string textShown, ref DateTime obj, TxtFormating tf, DateTime start = default)
         {
+
             Console.Clear();
+            string input;
+            string[] parts;
             while (true)
             {
-                if (DateTime.TryParse(animateAndCheck(tf, textShown), out obj))
+                try
                 {
-                    if (start != default && obj < start)
+                    input = animateAndCheck(tf, textShown);
+                    parts = input.Trim().Split('-');
+                    if (parts.Length == 3)
                     {
-                        Console.Clear();
-                        tf.warning("Please enter a date thats after the starting date.");
-                        continue;
+                        int.TryParse(parts[0], out int year);
+                        int.TryParse(parts[1], out int month);
+                        int.TryParse(parts[2], out int day);
+
+                        obj = new DateTime(year, month, day);
+                        if (start != default && obj < start)
+                        {
+                            Console.Clear();
+                            tf.warning("Please enter a date that is after the starting date.");
+                            continue;
+                        }
+                        else
+                        {
+                            break;
+                        }
                     }
-                    break;
                 }
-                else
+                catch (Exception ex)
                 {
                     Console.Clear();
-                    tf.warning("Invalid input. Please try again.");
+                    tf.warning("Invalid date format. Please use the format: year-month-day");
                 }
             }
         }
@@ -171,7 +209,7 @@ namespace CalendarForChessFans
             while (true)
             {
                 tf.TextToAnimateWave(tf.CenterText(txt), ConsoleColor.Red, ConsoleColor.Yellow);
-                outpt = Console.ReadLine();
+                outpt = tf.ReadCenteredInput();
 
                 if (wantedText1 != "tralalelotralala")
                 {
@@ -215,6 +253,7 @@ namespace CalendarForChessFans
             Console.ForegroundColor = ev.color;
             AnsiConsole.Write(new FigletText(FigletFont.Default, ev.Title).Centered());
             tf.resetColors();
+            Console.WriteLine();
             Console.BackgroundColor = ConsoleColor.Yellow;
             Console.ForegroundColor = ConsoleColor.DarkBlue;
             if (ev.isMoreDays)
@@ -242,6 +281,38 @@ namespace CalendarForChessFans
             Console.WriteLine(tf.CenterText("[Press any key to return]"));
             Console.ReadKey();
             Console.CursorVisible = true;
+        }
+        public void displayNotifications(List<Event> events)
+        {
+            TxtFormating tf = new TxtFormating();
+            Console.BackgroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            DateTime today = DateTime.Today;
+            bool anyEvent = false;
+            Console.WriteLine(tf.CenterText(""));
+            Console.WriteLine(tf.CenterText("╔══════════════════════════════╗"));
+            Console.WriteLine(tf.CenterText("║         Notifications        ║"));
+            Console.WriteLine(tf.CenterText("╚══════════════════════════════╝"));
+            Console.WriteLine(tf.CenterText(""));
+            foreach (Event e in events)
+            {
+                if (today == e.Date)
+                {
+                    Console.WriteLine(tf.CenterText($"Upcoming event: {e.Title}! From {e.Start}{amPm((int)e.Start)} till {e.End}{amPm((int)e.End)}!"));
+                    anyEvent = true;
+                }
+            }
+
+            if (!anyEvent)
+            {
+                Console.WriteLine(tf.CenterText("No events planned for today."));
+            }
+            Console.WriteLine(tf.CenterText(""));
+            tf.resetColors();
+        }
+        public string amPm(int hour)
+        {
+            return (hour < 12) ? "AM" : "PM";
         }
     }
 }

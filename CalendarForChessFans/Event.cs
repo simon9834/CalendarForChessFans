@@ -1,4 +1,6 @@
 ﻿
+using Newtonsoft.Json;
+
 namespace CalendarForChessFans
 {
     public class Event
@@ -8,26 +10,37 @@ namespace CalendarForChessFans
         public bool isMoreDays { get; set; }
         public DateTime? DateOptStart { get; set; }
         public DateTime? DateOptEnd { get; set; }
+        public enum LABEL
+        {
+            chessMeetup,
+            chessTournament,
+            chessTraining,
+            chessEvent,
+            nonChessEvent,
+        }
+        public LABEL label { get; set; } = LABEL.nonChessEvent;
         public int? Start { get; set; }
         public int? End { get; set; }
         public string? Location { get; set; }
         public string? Notes { get; set; }
         public ConsoleColor color { get; set; }
 
-        public Event(string title, DateTime? date, bool isMoreDays, DateTime? dateOptStart, DateTime? dateOptEnd, int? start, int? end, string? location, string? notes, ConsoleColor color)
+        [JsonConstructor]
+        public Event(string title, DateTime? date, bool isMoreDays, DateTime? dateOptStart, DateTime? dateOptEnd, int? start, int? end, string? location, string? notes,LABEL label, ConsoleColor color)
         {
-            handleCtorAction(title, date, isMoreDays, dateOptStart, dateOptEnd, start, end, location, notes);
+            handleCtorAction(title, date, isMoreDays, dateOptStart, dateOptEnd, start, end, location, notes, label);
             this.color = color;
         }
-        public Event(string title, DateTime? date, bool isMoreDays, DateTime dateOptStart, DateTime dateOptEnd, int start, int end, string? location, string? notes)
+        public Event(string title, DateTime? date, bool isMoreDays, DateTime dateOptStart, DateTime dateOptEnd, int start, int end, string? location, string? notes, LABEL label)
         {
-            handleCtorAction(title, date, isMoreDays, dateOptStart, dateOptEnd, start, end, location, notes);
+            handleCtorAction(title, date, isMoreDays, dateOptStart, dateOptEnd, start, end, location, notes, label);
             this.color = ConsoleColor.Blue;
         }
-        public void handleCtorAction(string title, DateTime? date, bool isMoreDays, DateTime? dateOptStart, DateTime? dateOptEnd, int? start, int? end, string? location, string? notes)
+        public void handleCtorAction(string title, DateTime? date, bool isMoreDays, DateTime? dateOptStart, DateTime? dateOptEnd, int? start, int? end, string? location, string? notes, LABEL label)
         {
+            label = label;
             Title = title;
-
+            this.isMoreDays = isMoreDays;
             if (isMoreDays)
             {
                 this.DateOptStart = dateOptStart;

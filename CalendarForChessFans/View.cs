@@ -17,14 +17,25 @@ namespace CalendarForChessFans
             this.events = events;
             eh.HighlightEvents(events, cr);
         }
+        public Event CreateEvent()
+        {
+            return eh.createEvent();
+        }
         public void Event(Event ev)
         {
             eh.DisplayEvent(ev);
         }
+        public void Notifications(List<Event> events)
+        {
+            eh.displayNotifications(events);
+        }
 
         public void Month(Calendar cr)
         {
-            AnsiConsole.Write(cr);
+            AnsiConsole.Write(new Panel(cr)
+                       .Border(BoxBorder.Rounded)
+                       .Padding(2, 1)
+                       .Expand());
         }
 
         public void Day(DateTime date)
