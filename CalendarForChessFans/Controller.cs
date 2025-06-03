@@ -3,6 +3,7 @@ namespace CalendarForChessFans
 {
     public class Controller
     {
+        
         private Spectre.Console.Calendar cl = new Spectre.Console.Calendar(new DateTime(2025 - 5));
         private TxtFormating tf = new TxtFormating();
         private EventStoring es = new EventStoring();
@@ -24,11 +25,49 @@ namespace CalendarForChessFans
                 ["help"] = tutorial,
                 ["find event"] = checkoutEvent,
                 ["find label"] = searchInLabels,
+                ["remove event"] = removeEvent,
             };
+        }
+        public async Task printRecentGame()
+        {
+            await ChessApi.PrintMostRecentGameAsync(tf);
+        }
+        public void removeEvent()
+        {
+            Console.Clear();
+            if (events.Count > 0)
+            {
+                while (true)
+                {
+                    tf.TextToAnimateWave(tf.CenterText("Write the title of the event you want to remove: "));
+                    string input = tf.ReadCenteredInput();
+                    if (CheckForKeyWords(input, true)) UserShowroom();
+                    Console.Clear();
+                    Event ev = events.FirstOrDefault(e => string.Equals(e.Title, input.Trim(), StringComparison.OrdinalIgnoreCase));
+                    if (ev != null)
+                    {
+                        string title = ev.Title;
+                        events.Remove(ev);
+                        Console.WriteLine(tf.CenterText($"Event '{title}' removed successfully."));
+                        getOut();
+                        MonthInput(true);
+                        break;
+                    }
+                    else
+                    {
+                        tf.warning("Event not found. Please check the title and try again.");
+                    }
+                    getOut();
+                }
+            }
+            else
+            {
+                Console.Clear();
+                tf.warning("No events available to remove.");
+            }
         }
         public void exit()
         {
-            EventStoring es = new EventStoring();
             es.SaveEvents(events);
             Environment.Exit(0);
         }
@@ -47,10 +86,11 @@ namespace CalendarForChessFans
                 {
                     Console.WriteLine(tf.CenterText($"{l}"));
                 }
+                Console.WriteLine();
                 string input = tf.ReadCenteredInput();
                 if (CheckForKeyWords(input, true)) UserShowroom();
                 Console.Clear();
-                if(input.Contains(' '))
+                if (input.Contains(' '))
                 {
                     input = input.Replace(" ", "");
                 }
@@ -83,6 +123,7 @@ namespace CalendarForChessFans
             Console.WriteLine(tf.CenterText("Wanna add an event? Just write 'create event'!"));
             Console.WriteLine(tf.CenterText("Wanna revisit this tutorial? Just write 'help'!"));
             Console.WriteLine(tf.CenterText("Wanna see an event you created? Just write 'find event'!"));
+            Console.WriteLine(tf.CenterText("Wanna remove an event? Just write 'remove event'!"));
             Console.WriteLine(tf.CenterText("Wanna search for events by label? Just write 'find label'!"));
             Console.WriteLine(tf.CenterText("Wanna exit from app? Just write 'exit'."));
             tf.resetColors();
@@ -97,7 +138,7 @@ namespace CalendarForChessFans
                 {
                     tf.TextToAnimateWave(tf.CenterText("Write the title of the event you want to see: "));
                     string input = tf.ReadCenteredInput();
-                    if (CheckForKeyWords(input, true)) UserShowroom();
+                    if (CheckForKeyWords(input, true)) _ = UserShowroom();
                     Console.Clear();
                     Event ev = events.FirstOrDefault(e => string.Equals(e.Title, input.Trim(), StringComparison.OrdinalIgnoreCase));
                     if (ev != null)
@@ -120,19 +161,6 @@ namespace CalendarForChessFans
         }
         public void welcome()
         {
-            Event chessEvent = new Event(
-            title: "City Chess Championship",
-            date: new DateTime(2025, 6, 20),
-            isMoreDays: false,
-            dateOptStart: DateTime.MinValue, // ignored since isMoreDays is false
-            dateOptEnd: DateTime.MinValue,   // ignored since isMoreDays is false
-            start: 10,
-            end: 16,
-            location: "Central Chess Club",
-            notes: "Bring your own board.",
-            label: Event.LABEL.chessTournament
-            );
-            events.Add(chessEvent);
             try
             {
                 var evs = es.LoadEvents();
@@ -154,7 +182,7 @@ namespace CalendarForChessFans
             try
             {
                 MonthInput();
-                UserShowroom();
+                _ = UserShowroom();
             }
             catch (Exception ex)
             {
@@ -172,21 +200,19 @@ namespace CalendarForChessFans
         {
             try
             {
-                if (year != int.MaxValue && month != int.MaxValue)
+                while (true)
                 {
-                    while (true)
-                    {
-                        tf.TextToAnimateWave(tf.CenterText("Write chosen command: "));
-                        //ca.FetchFideEventsAsync().Wait();
-                        CheckForKeyWords(tf.ReadCenteredInput());
-                    }
+                    tf.TextToAnimateWave(tf.CenterText("Write chosen command: "));
+                    printRecentGame().Wait();
+                    CheckForKeyWords(tf.ReadCenteredInput());
+                    tf.FullyClearConsole();
                 }
             }
             catch (IndexOutOfRangeException ex)
             {
                 Console.Clear();
                 tf.warning("Wrong input?");
-                UserShowroom();
+                _ = UserShowroom();
             }
         }
         public void createEvent()
@@ -203,7 +229,8 @@ namespace CalendarForChessFans
 
                 Console.WriteLine(tf.CenterText("Write the days number below"));
                 input = tf.ReadCenteredInput();
-                if (CheckForKeyWords(input, true)) UserShowroom();
+                if (CheckForKeyWords(input, true))
+                { _ = UserShowroom(); }
                 day = int.Parse(input);
                 v.UpdateEvents(events, cl);
 
@@ -218,7 +245,7 @@ namespace CalendarForChessFans
                 {
                     Console.Clear();
                     tf.warning($"bruh, do you see any {day} on the month calendar??");
-                    UserShowroom();
+                    _ = UserShowroom();
                 }
                 getOut();
                 tf.FullyClearConsole();
@@ -239,7 +266,8 @@ namespace CalendarForChessFans
                 string input;
                 tf.TextToAnimateWave(tf.CenterText("Please enter the year and month below in this format: year.month"));
                 input = tf.ReadCenteredInput();
-                if (CheckForKeyWords(input, true)) UserShowroom();
+                if (CheckForKeyWords(input, true))
+                { _ = UserShowroom(); }
                 string[] dateList = input.Trim().Split('.');
 
                 month = int.Parse(dateList[1]);
@@ -276,6 +304,7 @@ namespace CalendarForChessFans
             else
             {
                 if (!ignoreWar) tf.warning("Wrong spelling?");
+                getOut();
             }
             return isCalled;
         }
