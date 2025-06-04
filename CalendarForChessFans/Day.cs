@@ -9,9 +9,6 @@ namespace CalendarForChessFans
         private bool goes = false;
         public void CreateDayScheduleWEvents(string title, List<Event> events, DateTime date)
         {
-            //debugging
-            //Console.WriteLine($"lists size: {events.Count}");
-            //debugging end
             li = recreateListByDay(date, events);
             Console.BufferHeight = 1000;
             string line = new string('-', Console.WindowWidth - 2);
