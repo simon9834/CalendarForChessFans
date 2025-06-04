@@ -7,7 +7,6 @@ namespace CalendarForChessFans
         private Spectre.Console.Calendar cl = new Spectre.Console.Calendar(new DateTime(2025 - 5));
         private TxtFormating tf = new TxtFormating();
         private EventStoring es = new EventStoring();
-        //private ChessApi ca = new ChessApi();
         private View v = new View();
         private int year = int.MaxValue;
         private int month = int.MaxValue;
@@ -181,6 +180,8 @@ namespace CalendarForChessFans
         {
             try
             {
+                Console.Clear();
+                Console.WriteLine();
                 MonthInput();
                 _ = UserShowroom();
             }
@@ -202,8 +203,8 @@ namespace CalendarForChessFans
             {
                 while (true)
                 {
-                    tf.TextToAnimateWave(tf.CenterText("Write chosen command: "));
                     printRecentGame().Wait();
+                    tf.TextToAnimateWave(tf.CenterText("Write chosen command: "));
                     CheckForKeyWords(tf.ReadCenteredInput());
                     tf.FullyClearConsole();
                 }
@@ -303,8 +304,11 @@ namespace CalendarForChessFans
             }
             else
             {
-                if (!ignoreWar) tf.warning("Wrong spelling?");
-                getOut();
+                if (!ignoreWar)
+                {
+                    tf.warning("Wrong spelling?");
+                    getOut();
+                }
             }
             return isCalled;
         }
