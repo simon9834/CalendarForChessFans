@@ -20,9 +20,10 @@ namespace CalendarForChessFans
             int iHolder = 0;
             int index = 0;
             writeHours(ref iHolder, 12, li, ref index);
-            writeLines(line, 29, false);
+            writeLines(line, 24, false);
             writeHours(ref iHolder, 25, li, ref index);
-            writeLines(line, 52, true);
+            writeLines(line, 26, true);
+            
         }
         public void writeLines(string line, int height, bool onemore)
         {

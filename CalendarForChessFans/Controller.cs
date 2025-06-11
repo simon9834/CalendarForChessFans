@@ -206,7 +206,7 @@ namespace CalendarForChessFans
                     printRecentGame().Wait();
                     tf.TextToAnimateWave(tf.CenterText("Write chosen command: "));
                     CheckForKeyWords(tf.ReadCenteredInput());
-                    tf.FullyClearConsole();
+                    Console.Clear();
                 }
             }
             catch (IndexOutOfRangeException ex)
@@ -239,7 +239,7 @@ namespace CalendarForChessFans
                 int daysInMonth = DateTime.DaysInMonth(cl.Year, cl.Month);
                 if (!(day > daysInMonth))
                 {
-                    tf.FullyClearConsole();
+                    Console.Clear();
                     v.Day(new DateTime(cl.Year, cl.Month, day));
                 }
                 else
